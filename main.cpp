@@ -62,35 +62,71 @@ int main(int argc, const char * argv[]) {
 
 
 void * FIFO(void *){
-    int * apunt = numeros;
+    // Arrreglo de paginacion
+    int s[STACK];
+    memset(s, -1, sizeof(int)*STACK);
     
+    int * apunt = numeros;
+    int fallos = 0;
+    
+    cout << "FIFO, fallos: " << fallos << endl;
     return 0;
 }
 
 void * OPT(void *){
+    // Arrreglo de paginacion
+    int s[STACK];
+    memset(s, -1, sizeof(int)*STACK);
+    
     int distancia[STACK];
     int * apunt = numeros;
+    int fallos = 0;
     
+    cout << "Optimo, fallos: " << fallos << endl;
     return 0;
 }
 
 void * LRU_cont(void *){
+    // Arrreglo de paginacion
+    int s[STACK];
+    memset(s, -1, sizeof(int)*STACK);
+    
+    int tiempo = 0;
     int contador[STACK];
     int * apunt = numeros;
+    int fallos = 0;
+    // Inicializar los contadores en 0
+    memset(contador, 0, sizeof(int)*STACK);
     
+    cout << "LRU con contador, fallos: " << fallos << endl;
     return 0;
 }
 
 void * LRU_bit(void *){
+    // Arrreglo de paginacion
+    int s[STACK];
+    memset(s, -1, sizeof(int)*STACK);
+    
     bool bit[STACK];
     int * apunt;
+    int fallos = 0;
+    memset(bit, 0, sizeof(bool)*STACK);
     
+    cout << "LRU con un bit, fallos: " << fallos << endl;
     return 0;
 }
 
 void * LRU_dbits(void *){
-    bool bitl[STACK];
-    bool bire[STACK];
+    // Arrreglo de paginacion
+    int s[STACK];
+    memset(s, -1, sizeof(int)*STACK);
     
+    bool bitl[STACK];
+    bool bitr[STACK];
+    int fallos = 0;
+    memset(bitl, 0, sizeof(bool)*STACK);
+    memset(bitr, 0, sizeof(bool)*STACK);
+    
+    cout << "LRU con doble bit, fallos: " << fallos << endl;
     return 0;
 }
