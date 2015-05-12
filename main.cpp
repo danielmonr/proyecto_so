@@ -140,6 +140,12 @@ void * LRU_cont(void *){
     // Inicializar los contadores en 0
     memset(contador, 0, sizeof(int)*STACK);
     
+    // Simulador
+    int i;
+    for (i = 0; i < size; ++i){
+        
+    }
+    
     cout << "LRU con contador, fallos: " << fallos << endl;
     return 0;
 }
