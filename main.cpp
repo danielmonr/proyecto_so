@@ -9,11 +9,12 @@
 //
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
 #include "pthread.h"
 
-#define STACK 1000
+#define STACK 100
 #define NUM_THREADS 4
 
 typedef void *(*funciones)(void *);
@@ -35,6 +36,7 @@ int * numeros;
 int * fin_numeros;
 int tamo = 0;
 
+
 int main(int argc, const char * argv[]) {
     funciones funcion[5];
     funcion[0] = FIFO;
@@ -47,10 +49,12 @@ int main(int argc, const char * argv[]) {
     // Leer numeros desde std input
     string a;
     int num;
-    while(cin){
-        getline(cin, a);
-        cout << a << endl;
-        num = stoi(a);
+    while(1){
+        if (feof(stdin)){
+            break;
+        }
+        
+        fscanf(stdin, "%d", &num);
         provisional.push_back(num);
     }
     
@@ -58,16 +62,22 @@ int main(int argc, const char * argv[]) {
     int* indice = numeros;
     for(auto item:provisional){
         *indice = item;
-        indice++;
+        // cout << item << endl;
+        ++indice;
     }
     tamo = provisional.size();
     
+    fin_numeros = numeros + tamo -1;
     
-    // fin_numeros = numeros + size;
+    FIFO(0);
+    OPT(0);
+    LRU_bit(0);
+    LRU_cont(0);
     
     // Crear threads para los distintos algoritmos
     
-    /* pthread_t threads[NUM_THREADS];
+    /*
+    pthread_t threads[NUM_THREADS];
     int rc;
     for (int i = 0; i < NUM_THREADS; i++){
         rc = pthread_create(&threads[i], NULL, funcion[i], 0);
@@ -75,7 +85,7 @@ int main(int argc, const char * argv[]) {
             cout<< "No se pudo crear el thread " << i << "\n";
         }
     }
-     */
+    */
     return 0;
 }
 
@@ -136,6 +146,7 @@ void * OPT(void *){
         }
         avanzarDistancia(distancia, STACK, 1);
         ++n;
+        
     }
     
     cout << "Optimo, fallos: " << fallos << endl;
@@ -152,7 +163,7 @@ void * LRU_cont(void *){
     int * apunt = numeros;
     int fallos = 0;
     // Inicializar los contadores en 0
-    memset(contador, 0, sizeof(int)*STACK);
+    memset(contador, -10, sizeof(int)*STACK);
     
     // Simulador
     int i;
@@ -167,6 +178,7 @@ void * LRU_cont(void *){
             contador[viejo] = tiempo;
             fallos++;
         }
+        
         ++tiempo;
         ++apunt;
     }
@@ -180,7 +192,7 @@ void * LRU_bit(void *){
     int s[STACK];
     memset(s, -1, sizeof(int)*STACK);
     
-    bool bit[STACK];
+    int bit[STACK];
     int * apunt = numeros;
     int fallos = 0;
     memset(bit, 0, sizeof(bool)*STACK);
@@ -190,22 +202,25 @@ void * LRU_bit(void *){
     for(int i = 0; i < tamo; ++i){
         int existencia = buscarEnArreglo(s, *apunt, STACK);
         if (existencia != -1){
-            bit[existencia] = true;
+            //cout << "encontrado" << endl;
+            bit[existencia] = 1;
         }
         else{
-            while (!bit[pos]){
-                bit[pos] = false;
+            fallos++;
+            while (bit[pos] != 0){
+                bit[pos] = 0;
+                ++pos;
                 if (pos >= STACK){
                     pos = 0;
                 }
-                ++pos;
             }
-            bit[pos] = true;
+            bit[pos] = 1;
             s[pos] = *apunt;
+            
         }
+        
         ++apunt;
     }
-    
     cout << "LRU con un bit, fallos: " << fallos << endl;
     return 0;
 }
@@ -221,9 +236,9 @@ int buscarEnArreglo(int * a, int n, int tamano){
 
 int minimo(int * a, int tamano){
     int i;
-    int min = 0;
+    int min = -10;
     for (i = 0; i < tamano; ++i){
-        if (a[i] > a[min]){
+        if (a[i] < a[min]){
             min = i;
         }
     }
