@@ -13,6 +13,9 @@
 #include <string>
 #include "pthread.h"
 
+#include <cstring>
+
+
 #define STACK 1000
 #define NUM_THREADS 4
 
